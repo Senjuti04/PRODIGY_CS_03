@@ -1,0 +1,64 @@
+import re
+
+def assess_password_strength(password):
+    
+    # Initialize criteria counters
+    length_criteria = len(password) >= 8
+    uppercase_criteria = bool(re.search(r'[A-Z]', password))
+    lowercase_criteria = bool(re.search(r'[a-z]', password))
+    digit_criteria = bool(re.search(r'\d', password))
+    special_char_criteria = bool(re.search(r'[!@#$%^&*(),.?":{}|<>]', password))
+
+    # Calculate strength score (out of 5)
+    score = sum([length_criteria, uppercase_criteria, lowercase_criteria, digit_criteria, special_char_criteria])
+
+    # Provide feedback
+    feedback = []
+    if not length_criteria:
+        feedback.append("Password should be at least 8 characters long.")
+    if not uppercase_criteria:
+        feedback.append("Password should include at least one uppercase letter.")
+    if not lowercase_criteria:
+        feedback.append("Password should include at least one lowercase letter.")
+    if not digit_criteria:
+        feedback.append("Password should include at least one digit.")
+    if not special_char_criteria:
+        feedback.append("Password should include at least one special character (e.g., !, @, #, $).")
+
+    # Determine strength level
+    if score == 5:
+        strength = "Very Strong"
+    elif score == 4:
+        strength = "Strong"
+    elif score == 3:
+        strength = "Moderate"
+    elif score == 2:
+        strength = "Weak"
+    else:
+        strength = "Very Weak"
+
+    feedback.insert(0, f"Password Strength: {strength}")
+    return score, feedback
+
+def main():
+    """
+    Main function to interact with the user and assess password strength.
+    """
+    print("Password Strength Assessment Tool")
+    while True:
+        password = input("Enter a password to evaluate: ").strip()
+
+        score, feedback = assess_password_strength(password)
+
+        print("\nFeedback:")
+        for message in feedback:
+            print(f"- {message}")
+
+        if score >= 4:
+            print("\nYour password is strong enough!")
+            break
+        else:
+            print("\nYour password is too weak. Please try again.")
+
+if __name__ == "__main__":
+    main()
